@@ -1,0 +1,53 @@
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:2995",
+      "sslPort": 44377
+    }
+  },
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5293",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "EXPIRATION_REFRESH_TOKEN": "15",
+        "EXPIRATION_TOKEN": "1",
+        "MYSQL_CONNECTION": "server=104.215.82.71;database=reciclalos;user=reciclalos;password=kS6xFnEDrCPYYx6W;port=3306;AllowZeroDateTime=true;ConvertZeroDateTime=true;",
+        "TOKEN_KEY": "1c7d92b5e4evf5a1c7d92b5e4e2dc5a1e80f5b3e2d1b1"
+      }
+    },
+    "https": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://localhost:7031;http://localhost:5293",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "EXPIRATION_REFRESH_TOKEN": "15",
+        "EXPIRATION_TOKEN": "1",
+        "MYSQL_CONNECTION": "server=104.215.82.71;database=reciclalos;user=reciclalos;password=kS6xFnEDrCPYYx6W;port=3306;AllowZeroDateTime=true;ConvertZeroDateTime=true;",
+        "TOKEN_KEY": "1c7d92b5e4evf5a1c7d92b5e4e2dc5a1e80f5b3e2d1b1"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "EXPIRATION_REFRESH_TOKEN": "15",
+        "EXPIRATION_TOKEN": "1",
+        "MYSQL_CONNECTION": "server=104.215.82.71;database=reciclalos;user=reciclalos;password=kS6xFnEDrCPYYx6W;port=3306;AllowZeroDateTime=true;ConvertZeroDateTime=true;",
+        "TOKEN_KEY": "1c7d92b5e4evf5a1c7d92b5e4e2dc5a1e80f5b3e2d1b1"
+      }
+    }
+  }
+}

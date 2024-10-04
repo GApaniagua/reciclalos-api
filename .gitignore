@@ -1,0 +1,80 @@
+*.suo
+*.user
+*.sln.docstates
+*.tmp
+*.userprefs
+*.vspscc
+*.vssscc
+.suo.cache
+.suo.opt
+.user
+ipch
+*.pdb
+*.opendb
+Debug/
+obj/
+packages/
+*.user
+*.log
+*.cache
+*.local
+*.suo
+*.sln.docstates
+*.tmp
+*.userprefs
+*.vspscc
+*.vssscc
+.suo.cache
+.suo.opt
+*.user
+.env
+
+# User-specific files
+*.suo
+*.user
+*.sln.docstates
+*.tmp
+*.userprefs
+*.vspscc
+*.vssscc
+.suo.cache
+.suo.opt
+*.user
+
+# Build outputs
+bin/
+obj/
+
+# Dependency caches
+packages/
+
+# Local configuration file
+*.local
+
+# Test Results
+**/TestResults
+
+# Rider specific
+*.idea
+*.iws
+.Rider
+*.iml
+*.sln.iml
+
+# VS Code Workspace
+.vscode/
+
+# Logs
+*.log
+
+# Output
+*.out
+
+# Temporary files
+*.tmp
+
+# Swaps
+*.swp
+
+# Backups
+*~
