@@ -11,5 +11,5 @@ public partial class Municipio
 
     public int? DepartamentoId { get; set; }
 
-    public virtual Departamento? Departamento { get; set; }
+    public virtual Departamento Departamento { get; set; }
 }

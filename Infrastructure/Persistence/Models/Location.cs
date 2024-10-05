@@ -11,7 +11,7 @@ public partial class Location
 
     public string Address { get; set; } = null!;
 
-    public string? Image { get; set; }
+    public string Image { get; set; }
 
     public string Schedule { get; set; } = null!;
 
@@ -23,11 +23,11 @@ public partial class Location
 
     public string Materials { get; set; } = null!;
 
-    public string? Latlng { get; set; }
+    public string Latlng { get; set; }
 
-    public string? Departamento { get; set; }
+    public string Departamento { get; set; }
 
-    public string? Municipio { get; set; }
+    public string Municipio { get; set; }
 
     public string Email { get; set; } = null!;
 

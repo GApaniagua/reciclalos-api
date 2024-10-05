@@ -22,7 +22,7 @@ public class CollectionCenterManager : ICollectionCenterService
     {
         try
         {
-            var entities = await this._unitOfWork.Repository.LocationRepository.GetAllAsync( q => q.Active == true);
+            var entities = await this._unitOfWork.Repository.LocationRepository.GetAllAsync(q => q.Active == true);
             var originalCollectionCenters = _mapper.Map<IEnumerable<CollectionCenter>>(entities);
 
             var collectionCenters = _mapper.Map<IEnumerable<CollectionCenterDto>>(originalCollectionCenters);
@@ -58,7 +58,7 @@ public class CollectionCenterManager : ICollectionCenterService
         }
     }
 
-    public async Task<CollectionCenterDto?> GetCollectionCenterByIdUseCase(int id)
+    public async Task<CollectionCenterDto> GetCollectionCenterByIdUseCase(int id)
     {
         try
         {

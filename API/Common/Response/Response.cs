@@ -1,23 +1,24 @@
-using API.Common.Enum;
+using System.Net;
 
 namespace API.Common.Response;
 
 public class Response<TBody>
 {
-    public StatusServerResponse status { get; set; }
-    public TBody? data { get; set; }
-    public bool isSuccess { get; set; }
-    public string message { get; set; }
+    public HttpStatusCode Status { get; set; }
+    public TBody Data { get; set; }
+    public bool IsSuccess { get; set; }
+    public string Message { get; set; }
 
-    public Response() {
-        message = string.Empty;
-    }
-    public Response(StatusServerResponse _status, TBody? _data, bool _isSuccess, string _message)
+    public Response()
     {
-        status = _status;
-        data = _data;
-        isSuccess = _isSuccess;
-        message = _message;
+        Message = string.Empty;
+    }
+    public Response(HttpStatusCode _status, TBody _data, bool _isSuccess, string _message)
+    {
+        Status = _status;
+        Data = _data;
+        IsSuccess = _isSuccess;
+        Message = _message;
     }
 }
 

@@ -13,7 +13,7 @@ public class CatalogManager : ICatalogService
 {
   private readonly IUnitOfWork _unitOfWork;
   private readonly IMapper _mapper;
-  
+
   public CatalogManager(IUnitOfWork unitOfWork, IMapper mapper)
   {
     this._unitOfWork = unitOfWork;
@@ -29,7 +29,7 @@ public class CatalogManager : ICatalogService
       return materialsType;
     }
     catch (Exception)
-    { 
+    {
       throw;
     }
   }
@@ -40,12 +40,12 @@ public class CatalogManager : ICatalogService
     try
     {
       var collections = await this._unitOfWork.Repository.CollectionRepository.GetAllAsync();
-      var collectionsMap = _mapper.Map<IEnumerable<Catalog>>(collections);   
+      var collectionsMap = _mapper.Map<IEnumerable<Catalog>>(collections);
       var MaterialReciclableType = _mapper.Map<IEnumerable<MaterialRecyclableType>>(collectionsMap);
       return MaterialReciclableType;
     }
     catch (Exception)
-    { 
+    {
       throw;
     }
   }
@@ -59,7 +59,7 @@ public class CatalogManager : ICatalogService
       return departments;
     }
     catch (Exception)
-    { 
+    {
       throw;
     }
   }
@@ -73,7 +73,7 @@ public class CatalogManager : ICatalogService
       return municipalities;
     }
     catch (Exception)
-    { 
+    {
       throw;
     }
   }
@@ -82,22 +82,22 @@ public class CatalogManager : ICatalogService
   {
     try
     {
-        if (start > end)
-        {
-          throw new ArgumentException("La fecha de inicio debe ser anterior o igual a la fecha de fin.");
-        }
+      if (start > end)
+      {
+        throw new ArgumentException("La fecha de inicio debe ser anterior o igual a la fecha de fin.");
+      }
 
-        if (start == null || end == null)
-        {
-          throw new ArgumentException("Las fechas de inicio y fin no pueden ser nulas.");
-        }
+      if (start == DateTime.MinValue || end == DateTime.MinValue)
+      {
+        throw new ArgumentException("Las fechas de inicio y fin no pueden ser nulas.");
+      }
       if (materialTypeId != null)
       {
 
         var collections = await this._unitOfWork.Repository.CollectionRepository.GetAllAsync(x => x.Created >= start && x.Created <= end);
 
-        var reportDtos = this._mapper.Map<IEnumerable<ReportDto>>(collections);   
-        foreach(var report in reportDtos)
+        var reportDtos = this._mapper.Map<IEnumerable<ReportDto>>(collections);
+        foreach (var report in reportDtos)
         {
           var location = await this._unitOfWork.Repository.LocationRepository.SingleOrDefaultAsync(x => x.Id == report.IdCentroAcopio);
           report.CentroDeAcopio = location.Name;
@@ -109,24 +109,24 @@ public class CatalogManager : ICatalogService
           throw new Exception("Material no encontrado");
         }
         var materialMap = this._mapper.Map<MaterialTypes>(material);
-        return  GetGroupedByMaterial(material, materialMap, reportDtos);
+        return GetGroupedByMaterial(material, materialMap, reportDtos);
 
-      } 
-      else 
+      }
+      else
       {
-        
+
         var collections = await this._unitOfWork.Repository.CollectionRepository.GetAllAsync(x => x.Created >= start && x.Created <= end);
-        var reportDtos = this._mapper.Map<IEnumerable<ReportDto>>(collections);   
-        foreach(var report in reportDtos)
+        var reportDtos = this._mapper.Map<IEnumerable<ReportDto>>(collections);
+        foreach (var report in reportDtos)
         {
           var location = await this._unitOfWork.Repository.LocationRepository.SingleOrDefaultAsync(x => x.Id == report.IdCentroAcopio);
           report.CentroDeAcopio = location.Name;
         }
 
-      var groupedReports = reportDtos
-          .GroupBy(r => new {r.CentroDeAcopio,  year = r.Fecha.Year, month = r.Fecha.Month, day = r.Fecha.Day})
-          .Select(g => new ReportDto
-          {
+        var groupedReports = reportDtos
+            .GroupBy(r => new { r.CentroDeAcopio, year = r.Fecha.Year, month = r.Fecha.Month, day = r.Fecha.Day })
+            .Select(g => new ReportDto
+            {
               CentroDeAcopio = g.Key.CentroDeAcopio,
               Latas = g.Sum(r => r.Latas),
               PapelYCarton = g.Sum(r => r.PapelYCarton),
@@ -135,7 +135,7 @@ public class CatalogManager : ICatalogService
               EnvasesVidrio = g.Sum(r => r.EnvasesVidrio),
               Fecha = new DateTime(g.Key.year, g.Key.month, g.Key.day), // Si la fecha es 0001-01-01, usar la actual
               TetraPak = g.Sum(r => r.TetraPak) // Usar la fecha más reciente
-          }).ToList();
+            }).ToList();
 
         var csvBuilder = new StringBuilder();
 
@@ -148,139 +148,139 @@ public class CatalogManager : ICatalogService
         }
 
         return csvBuilder.ToString();
-      }  
+      }
     }
     catch (Exception error)
     {
-      
+
       throw new Exception(error.Message);
     }
-   
+
 
   }
 
-    private static string GetGroupedByMaterial(Material material, MaterialTypes materialMap, IEnumerable<ReportDto> reportDtos)
+  private static string GetGroupedByMaterial(Material material, MaterialTypes materialMap, IEnumerable<ReportDto> reportDtos)
+  {
+    var csvBuilder = new StringBuilder();
+    switch (materialMap.Name)
     {
-      var csvBuilder = new StringBuilder();
-      switch (materialMap.Name)
-      {
-        case "Latas":
-          reportDtos
-            .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
-            .Select(g => new ReportDto
-            {
-                CentroDeAcopio = g.Key.CentroDeAcopio,
-                Latas = g.Sum(r => r.Latas),
-                Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now, // Si la fecha es 0001-01-01, usar la actual
-            }).ToList();
-
-         
-          csvBuilder.AppendLine("CENTRO DE ACOPIO,LATAS,FECHA");
-  
-          foreach (var registro in reportDtos)
+      case "Latas":
+        reportDtos
+          .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
+          .Select(g => new ReportDto
           {
-            csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.Latas},{registro.Fecha:yyyy-MM-dd}");
-          }
-          break;
-        case "Papel y cartón":
-          reportDtos
-            .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
-            .Select(g => new ReportDto
-            {
-                CentroDeAcopio = g.Key.CentroDeAcopio,
-                PapelYCarton = g.Sum(r => r.PapelYCarton),
-                Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now, // Si la fecha es 0001-01-01, usar la actual
-            }).ToList();
-          csvBuilder.AppendLine("CENTRO DE ACOPIO,PAPEL Y CARTON,FECHA");
+            CentroDeAcopio = g.Key.CentroDeAcopio,
+            Latas = g.Sum(r => r.Latas),
+            Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now, // Si la fecha es 0001-01-01, usar la actual
+          }).ToList();
 
-  
-          foreach (var registro in reportDtos)
+
+        csvBuilder.AppendLine("CENTRO DE ACOPIO,LATAS,FECHA");
+
+        foreach (var registro in reportDtos)
+        {
+          csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.Latas},{registro.Fecha:yyyy-MM-dd}");
+        }
+        break;
+      case "Papel y cartón":
+        reportDtos
+          .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
+          .Select(g => new ReportDto
           {
-            csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.PapelYCarton},{registro.Fecha:yyyy-MM-dd}");
-          }
-            break;
-        case "Plasticos PET":
-          reportDtos
-            .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
-            .Select(g => new ReportDto
-            {
-                CentroDeAcopio = g.Key.CentroDeAcopio,
-                PlasticoPet = g.Sum(r => r.PlasticoPet),
-                Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now, // Si la fecha es 0001-01-01, usar la actual
-            }).ToList();
-             csvBuilder.AppendLine("CENTRO DE ACOPIO,PLÁSTICO PET,FECHA");
+            CentroDeAcopio = g.Key.CentroDeAcopio,
+            PapelYCarton = g.Sum(r => r.PapelYCarton),
+            Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now, // Si la fecha es 0001-01-01, usar la actual
+          }).ToList();
+        csvBuilder.AppendLine("CENTRO DE ACOPIO,PAPEL Y CARTON,FECHA");
 
-  
-          foreach (var registro in reportDtos)
+
+        foreach (var registro in reportDtos)
+        {
+          csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.PapelYCarton},{registro.Fecha:yyyy-MM-dd}");
+        }
+        break;
+      case "Plasticos PET":
+        reportDtos
+          .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
+          .Select(g => new ReportDto
           {
-            csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.PlasticoPet},{registro.Fecha:yyyy-MM-dd}");
-          }
-            break;
-        case "Plasticos Otros":
-          reportDtos
-            .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
-            .Select(g => new ReportDto
-            {
-                CentroDeAcopio = g.Key.CentroDeAcopio,
-                PlasticoOtros = g.Sum(r => r.PlasticoOtros),
-                Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now, // Si la fecha es 0001-01-01, usar la actual
-            }).ToList();
-             csvBuilder.AppendLine("CENTRO DE ACOPIO,PLASTICO OTROS,FECHA");
+            CentroDeAcopio = g.Key.CentroDeAcopio,
+            PlasticoPet = g.Sum(r => r.PlasticoPet),
+            Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now, // Si la fecha es 0001-01-01, usar la actual
+          }).ToList();
+        csvBuilder.AppendLine("CENTRO DE ACOPIO,PLÁSTICO PET,FECHA");
 
-  
-          foreach (var registro in reportDtos)
+
+        foreach (var registro in reportDtos)
+        {
+          csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.PlasticoPet},{registro.Fecha:yyyy-MM-dd}");
+        }
+        break;
+      case "Plasticos Otros":
+        reportDtos
+          .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
+          .Select(g => new ReportDto
           {
-            csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.PlasticoOtros},{registro.Fecha:yyyy-MM-dd}");
-          }
+            CentroDeAcopio = g.Key.CentroDeAcopio,
+            PlasticoOtros = g.Sum(r => r.PlasticoOtros),
+            Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now, // Si la fecha es 0001-01-01, usar la actual
+          }).ToList();
+        csvBuilder.AppendLine("CENTRO DE ACOPIO,PLASTICO OTROS,FECHA");
 
-            break;
-        case "Envases y botellas de vidrio":
-          reportDtos
-            .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
-            .Select(g => new ReportDto
-            {
-                CentroDeAcopio = g.Key.CentroDeAcopio,
-                EnvasesVidrio = g.Sum(r => r.EnvasesVidrio),
-                Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now,
-            }).ToList();
-             csvBuilder.AppendLine("CENTRO DE ACOPIO,ENVASES Y BOTELLAS DE VIDRIO,FECHA");
 
-  
-          foreach (var registro in reportDtos)
+        foreach (var registro in reportDtos)
+        {
+          csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.PlasticoOtros},{registro.Fecha:yyyy-MM-dd}");
+        }
+
+        break;
+      case "Envases y botellas de vidrio":
+        reportDtos
+          .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
+          .Select(g => new ReportDto
           {
-            csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.EnvasesVidrio},{registro.Fecha:yyyy-MM-dd}");
-          }
+            CentroDeAcopio = g.Key.CentroDeAcopio,
+            EnvasesVidrio = g.Sum(r => r.EnvasesVidrio),
+            Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now,
+          }).ToList();
+        csvBuilder.AppendLine("CENTRO DE ACOPIO,ENVASES Y BOTELLAS DE VIDRIO,FECHA");
 
-            break;
-        case "Multicapa":
-          reportDtos
-            .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
-            .Select(g => new ReportDto
-            {
-                CentroDeAcopio = g.Key.CentroDeAcopio,
-                Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now, // Si la fecha es 0001-01-01, usar la actual
-                TetraPak = g.Sum(r => r.TetraPak) // Usar la fecha más reciente
-            }).ToList();
-             csvBuilder.AppendLine("CENTRO DE ACOPIO,TETRA PAK,FECHA");
 
-  
-          foreach (var registro in reportDtos)
+        foreach (var registro in reportDtos)
+        {
+          csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.EnvasesVidrio},{registro.Fecha:yyyy-MM-dd}");
+        }
+
+        break;
+      case "Multicapa":
+        reportDtos
+          .GroupBy(r => new { r.CentroDeAcopio, r.Fecha })
+          .Select(g => new ReportDto
           {
-            csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.TetraPak},{registro.Fecha:yyyy-MM-dd}");
-          }
+            CentroDeAcopio = g.Key.CentroDeAcopio,
+            Fecha = g.Key.Fecha != DateTime.MinValue ? g.Key.Fecha : DateTime.Now, // Si la fecha es 0001-01-01, usar la actual
+            TetraPak = g.Sum(r => r.TetraPak) // Usar la fecha más reciente
+          }).ToList();
+        csvBuilder.AppendLine("CENTRO DE ACOPIO,TETRA PAK,FECHA");
 
-            break;
-        default:
-            throw new Exception("Material no reconocido: " + material.Name);
-            break;
+
+        foreach (var registro in reportDtos)
+        {
+          csvBuilder.AppendLine($"{registro.CentroDeAcopio},{registro.TetraPak},{registro.Fecha:yyyy-MM-dd}");
+        }
+
+        break;
+      default:
+        throw new Exception("Material no reconocido: " + material.Name);
+        // break;
     }
-     return csvBuilder.ToString();
+    return csvBuilder.ToString();
   }
 
-    public async Task<IEnumerable<CollectorTypeDto>> GetCollectorTypeUseCase()
-    {
-      var roles = await this._unitOfWork.Repository.RoleRepository.GetAllAsync();
-      var collectorType = this._mapper.Map<IEnumerable<CollectorTypeDto>>(roles);
-      return collectorType;
-    }
+  public async Task<IEnumerable<CollectorTypeDto>> GetCollectorTypeUseCase()
+  {
+    var roles = await this._unitOfWork.Repository.RoleRepository.GetAllAsync();
+    var collectorType = this._mapper.Map<IEnumerable<CollectorTypeDto>>(roles);
+    return collectorType;
+  }
 }

@@ -9,6 +9,7 @@ using System.Text;
 using Application.CollectorCore.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 
 namespace API.Controller;
@@ -33,7 +34,7 @@ public class CatalogController : ControllerBase
   {
 
     return new Response<IEnumerable<MaterialTypes>>(
-      StatusServerResponse.OK,
+      HttpStatusCode.OK,
       await this._catalogService.GetAllMaterialTypesUseCase(),
       true,
       ""
@@ -44,7 +45,7 @@ public class CatalogController : ControllerBase
   // public async Task<Response<IEnumerable<MaterialRecyclableType>>> GetMaterialRecyclableTypes()
   // {
   //   return new Response<IEnumerable<MaterialRecyclableType>>(
-  //     StatusServerResponse.OK,
+  //     HttpStatusCode.OK,
   //     await this._catalogService.GetAllMaterialRecyclableTypesUseCase(),
   //     true,
   //     ""
@@ -58,7 +59,7 @@ public class CatalogController : ControllerBase
   {
     var departments = await this._catalogService.GetAllDepartmentsUseCase();
     return new Response<IEnumerable<Department>>(
-      StatusServerResponse.OK,
+      HttpStatusCode.OK,
       departments,
       true,
       ""
@@ -72,7 +73,7 @@ public class CatalogController : ControllerBase
   {
     var municipalities = await this._catalogService.GetAllMunicipalitiesUseCase();
     return new Response<IEnumerable<Municipality>>(
-      StatusServerResponse.OK,
+      HttpStatusCode.OK,
       municipalities,
       true,
       ""
@@ -88,7 +89,7 @@ public class CatalogController : ControllerBase
   {
     var collectorTypes = await this._catalogService.GetCollectorTypeUseCase();
     return new Response<IEnumerable<CollectorTypeDto>>(
-      StatusServerResponse.OK,
+      HttpStatusCode.OK,
       collectorTypes,
       true,
       ""
@@ -101,6 +102,11 @@ public class CatalogController : ControllerBase
                   Description = "This service can only be accessed by administrators.")]
   public async Task<IActionResult> GetReports([FromQuery] int? materialTypeId, [FromQuery] string startDate, [FromQuery] string endDate)
   {
+    if (string.IsNullOrEmpty(startDate) || string.IsNullOrEmpty(endDate))
+    {
+      throw new ArgumentException("Las fechas de inicio y fin no pueden ser nulas.");
+    }
+
     DateTime start = DateTime.Parse(startDate);
     DateTime end = DateTime.Parse(endDate);
     var csv = await this._catalogService.GetReportUseCase(materialTypeId, start, end);

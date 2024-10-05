@@ -1,3 +1,4 @@
+using System.Net;
 using API.Common.Enum;
 using API.Common.Response;
 using Application.AuthCore;
@@ -9,7 +10,7 @@ namespace API.Controller;
 
 [Route("api/v1/[controller]")]
 [ApiController]
-public class AuthController : ControllerBase 
+public class AuthController : ControllerBase
 {
   private readonly IAuthService _authService;
   public AuthController(
@@ -30,8 +31,8 @@ public class AuthController : ControllerBase
         throw new Exception("usuario no autorizado");
       }
 
-      return  new Response<RefreshTokenResult>(
-        StatusServerResponse.OK,
+      return new Response<RefreshTokenResult>(
+        HttpStatusCode.OK,
         token,
         true,
         ""
@@ -39,10 +40,10 @@ public class AuthController : ControllerBase
     }
     catch (Exception error)
     {
-     throw new Exception(error.Message);
+      throw new Exception(error.Message);
     }
   }
-  
+
   [HttpPost("refresh")]
   public async Task<Response<RefreshTokenResult>> RefreshToken()
   {
@@ -59,14 +60,14 @@ public class AuthController : ControllerBase
 
 
     var refreshToken = await this._authService.GenerateRefreshToken(token);
-      if (refreshToken == null)
+    if (refreshToken == null)
     {
       throw new Exception("usuario no autorizado");
     }
 
 
-    return  new Response<RefreshTokenResult>(
-    StatusServerResponse.OK,
+    return new Response<RefreshTokenResult>(
+    HttpStatusCode.OK,
     refreshToken,
     true,
     ""

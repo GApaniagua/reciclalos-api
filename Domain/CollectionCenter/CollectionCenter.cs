@@ -18,6 +18,6 @@ public class CollectionCenter
     public string Email { get; set; }           // Ejemplo: "Chaya.Schroeder17@gmail.com"
     public string Station { get; set; }         // Ejemplo: "Publico"
     public string MapUrl { get; set; }          // Ejemplo: "http://fitting-bet.biz"
-    public string? Latitude { get; set; }
-    public string? Longitude { get; set; }
+    public string Latitude { get; set; }
+    public string Longitude { get; set; }
 }

@@ -25,7 +25,7 @@ public partial class User
     /// <summary>
     /// usuarios acopiadores
     /// </summary>
-    public string? IdUsers { get; set; }
+    public string IdUsers { get; set; }
 
     public string Logo { get; set; } = null!;
 

@@ -9,7 +9,7 @@ public partial class Material
 
     public string Name { get; set; } = null!;
 
-    public string? ImageUrl { get; set; }
+    public string ImageUrl { get; set; }
 
     public string Color { get; set; } = null!;
 }

@@ -13,11 +13,11 @@ public partial class UserDeviceLogin
 
     public string Password { get; set; } = null!;
 
-    public string? Device { get; set; }
+    public string Device { get; set; }
 
-    public string? Os { get; set; }
+    public string Os { get; set; }
 
-    public string? AppVersion { get; set; }
+    public string AppVersion { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 }

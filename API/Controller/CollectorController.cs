@@ -4,6 +4,7 @@ using Domain.Collector;
 using API.Common.Response;
 using API.Common.Enum;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace API.Controller;
 
@@ -34,8 +35,8 @@ public class CollectorController : ControllerBase
     try
     {
       await this._collectorService.CreateCollector(collector);
-      return  new Response<string>(
-        StatusServerResponse.Created,
+      return new Response<string>(
+        HttpStatusCode.Created,
         "guadado con exito",
         true,
         ""
@@ -44,12 +45,12 @@ public class CollectorController : ControllerBase
     catch (Exception error)
     {
       var errorResponse = new Response<string>(
-          StatusServerResponse.InternalServerError,
+          HttpStatusCode.InternalServerError,
           "Error en el servidor",
           false,
           $"{error.Message}"
       );
-      
+
       return errorResponse;
     }
   }
@@ -63,15 +64,15 @@ public class CollectorController : ControllerBase
     {
       // Verifica si el encabezado Authorization existe
       var authHeader = Request.Headers["Authorization"].FirstOrDefault();
-  
+
       if (authHeader == null || !authHeader.StartsWith("Bearer "))
       {
         throw new Exception("no existe token en la petición");
       }
-      var token =  authHeader.Substring("Bearer ".Length).Trim();
-      var collector  = await this._collectorService.GetAdminAllCollector(token);
-      return  new Response<CollectorAdminViewDto>(
-        StatusServerResponse.Created,
+      var token = authHeader.Substring("Bearer ".Length).Trim();
+      var collector = await this._collectorService.GetAdminAllCollector(token);
+      return new Response<CollectorAdminViewDto>(
+        HttpStatusCode.Created,
         collector,
         true,
         ""
@@ -85,13 +86,13 @@ public class CollectorController : ControllerBase
 
   [Authorize(Policy = "AdminOnly")]
   [HttpPatch("{id}")]
-    public async Task<Response<bool>> UpdateColletor([FromBody] UpdateCollector collector, int id)
+  public async Task<Response<bool>> UpdateColletor([FromBody] UpdateCollector collector, int id)
   {
     try
     {
-      var collectors  = await this._collectorService.UpdateCollector(collector, id);
-      return  new Response<bool>(
-        StatusServerResponse.Created,
+      var collectors = await this._collectorService.UpdateCollector(collector, id);
+      return new Response<bool>(
+        HttpStatusCode.Created,
         collectors,
         true,
         ""
@@ -110,8 +111,8 @@ public class CollectorController : ControllerBase
     {
 
       await this._collectorService.CreateCollectorWithMaterials(collector);
-      return  new Response<string>(
-        StatusServerResponse.Created,
+      return new Response<string>(
+        HttpStatusCode.Created,
         "guadado con exito",
         true,
         ""
@@ -120,12 +121,12 @@ public class CollectorController : ControllerBase
     catch (Exception error)
     {
       var errorResponse = new Response<string>(
-          StatusServerResponse.InternalServerError,
+          HttpStatusCode.InternalServerError,
           "Error en el servidor",
           false,
           $"{error.Message}"
       );
-      
+
       return errorResponse;
     }
   }
@@ -135,8 +136,8 @@ public class CollectorController : ControllerBase
     try
     {
       await this._collectorService.CreateCollectorSellMaterials(collector);
-      return  new Response<string>(
-        StatusServerResponse.Created,
+      return new Response<string>(
+        HttpStatusCode.Created,
         "guadado con exito",
         true,
         ""
@@ -145,12 +146,12 @@ public class CollectorController : ControllerBase
     catch (Exception error)
     {
       var errorResponse = new Response<string>(
-          StatusServerResponse.InternalServerError,
+          HttpStatusCode.InternalServerError,
           "Error en el servidor",
           false,
           $"{error.Message}"
       );
-      
+
       return errorResponse;
     }
   }

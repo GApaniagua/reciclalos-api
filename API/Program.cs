@@ -137,6 +137,8 @@ builder.Services.AddScoped<ICollectionCenterService, CollectionCenterManager>();
 builder.Services.AddScoped<ICatalogService, CatalogManager>();
 builder.Services.AddScoped<IAuthService, AuthManager>();
 builder.Services.AddScoped<IGameService, GameManager>();
+builder.Services.AddScoped<IGameRepository, GameRepository>();
+builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 
 var app = builder.Build();
 

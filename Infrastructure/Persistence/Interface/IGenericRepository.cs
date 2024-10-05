@@ -3,8 +3,9 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
 
-namespace Infrastructure.Persistence.Interface{
-  public interface IGenericRepository<T> where T : class 
+namespace Infrastructure.Persistence.Interface
+{
+    public interface IGenericRepository<T> where T : class
     {
         void Add(T t);
         void Add(IEnumerable<T> t);
@@ -26,13 +27,13 @@ namespace Infrastructure.Persistence.Interface{
             Expression<Func<T, bool>> predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null
         );
-
+        Task<T> GetAsync(string filter = null, bool tracked = true, string includeProperties = null, Expression<Func<T, bool>> filterFn = null);
         IEnumerable<T> GetAll(
-            Expression<Func<T, bool>> predicate = null,
-            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            int? take = null,
-            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
-            bool AsNoTracking = false);
+          Expression<Func<T, bool>> predicate = null,
+          Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+          int? take = null,
+          Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+          bool AsNoTracking = false);
 
         Task<IEnumerable<T>> GetAllAsync(
             Expression<Func<T, bool>> predicate = null,

@@ -9,7 +9,7 @@ public partial class Event
 
     public string Name { get; set; } = null!;
 
-    public string? Image { get; set; }
+    public string Image { get; set; }
 
     public string Description { get; set; } = null!;
 
@@ -24,26 +24,26 @@ public partial class Event
 
     public DateTime Finish { get; set; }
 
-    public string? Url { get; set; }
+    public string Url { get; set; }
 
-    public string? Phone { get; set; }
+    public string Phone { get; set; }
 
-    public string? Email { get; set; }
+    public string Email { get; set; }
 
-    public string? Whatsapp { get; set; }
+    public string Whatsapp { get; set; }
 
     /// <summary>
     /// waze url
     /// </summary>
-    public string? Waze { get; set; }
+    public string Waze { get; set; }
 
-    public string? IdCategories { get; set; }
+    public string IdCategories { get; set; }
 
-    public string? Materials { get; set; }
+    public string Materials { get; set; }
 
     public bool? Active { get; set; }
 
-    public string? IdPartners { get; set; }
+    public string IdPartners { get; set; }
 
     public DateTime Created { get; set; }
 }

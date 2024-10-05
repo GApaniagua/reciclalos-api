@@ -38,14 +38,14 @@ public class CollectionCenterController : ControllerBase
 
         if (result == null)
         {
-            response.status = StatusServerResponse.NotFound;
-            response.data = null;
-            response.message = $"No collections centers was found";
+            response.Status = HttpStatusCode.NotFound;
+            response.Data = null;
+            response.Message = $"No collections centers was found";
             return NotFound(response);
         }
 
-        response.data = result;
-        response.status = StatusServerResponse.OK;
+        response.Data = result;
+        response.Status = HttpStatusCode.OK;
         return Ok(response);
     }
 
@@ -61,9 +61,9 @@ public class CollectionCenterController : ControllerBase
 
         if (id <= 0)
         {
-            response.status = StatusServerResponse.BadRequest;
-            response.data = null;
-            response.message = $"The id: {id} is invalid";
+            response.Status = HttpStatusCode.BadRequest;
+            response.Data = null;
+            response.Message = $"The id: {id} is invalid";
             return BadRequest(response);
         }
 
@@ -71,14 +71,14 @@ public class CollectionCenterController : ControllerBase
 
         if (result == null)
         {
-            response.status = StatusServerResponse.NotFound;
-            response.data = null;
-            response.message = $"No collection center was found with id: {id}";
+            response.Status = HttpStatusCode.NotFound;
+            response.Data = null;
+            response.Message = $"No collection center was found with id: {id}";
             return NotFound(response);
-        }   
+        }
 
-        response.data = result;
-        response.status = StatusServerResponse.OK;
+        response.Data = result;
+        response.Status = HttpStatusCode.OK;
         return Ok(response);
-    }   
+    }
 }

@@ -6,5 +6,5 @@ namespace Domain.CollectionCenter;
 public interface ICollectionCenterService
 {
   Task<IEnumerable<CollectionCenterDto>> GetAllCollectionCentersUseCase();
-  Task<CollectionCenterDto?> GetCollectionCenterByIdUseCase(int id);
+  Task<CollectionCenterDto> GetCollectionCenterByIdUseCase(int id);
 }
