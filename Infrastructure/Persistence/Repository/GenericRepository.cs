@@ -110,7 +110,44 @@ public abstract class GenericRepository<T> where T : class
 
     return query.ToList();
   }
+  public async Task<(List<T> List, int Total)> GetListAllAsync(string filter = null, bool tracked = true, string includeProperties = null,
+                          int? pageSize = null, int? pageNumber = null, string sort = null, string order = null, Expression<Func<T, bool>> filterFn = null)
+  {
+    IQueryable<T> query = dbSet;
+    int total = 0;
 
+    if (!tracked)
+      query = query.AsNoTracking();
+
+    if (!string.IsNullOrWhiteSpace(includeProperties))
+      query = setIncludeProperties(query, includeProperties);
+
+    if (!string.IsNullOrEmpty(filter))
+      query = query.Where(filter);
+
+    if (filterFn != null)
+      query = query.Where(filterFn);
+
+    if (!string.IsNullOrWhiteSpace(sort))
+    {
+      string customOrder = string.IsNullOrWhiteSpace(order) ? "ASC" : order;
+      query = query.OrderBy($"{sort} {customOrder}");
+    }
+
+    var result = await query.ToListAsync();
+
+    total = result.Count;
+
+    if (pageSize > 0)
+    {
+      if (!pageNumber.HasValue || pageNumber == 0)
+        pageNumber = 1;
+
+      result = result.AsQueryable().Skip(pageSize.Value * (pageNumber.Value - 1)).Take(pageSize.Value).ToList();
+    }
+
+    return (result, total);
+  }
   public async Task<T> GetAsync(string filter = null, bool tracked = true, string includeProperties = null, Expression<Func<T, bool>> filterFn = null)
   {
     IQueryable<T> query = dbSet;

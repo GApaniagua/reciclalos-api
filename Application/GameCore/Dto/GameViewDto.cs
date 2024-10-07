@@ -7,7 +7,7 @@ public class AnswerDto
     public bool IsCorrect { get; set; }
 }
 
-public class GameViewDto
+public class QuestionDTO
 {
     public int Id { get; set; }
     public string QuestionText { get; set; }

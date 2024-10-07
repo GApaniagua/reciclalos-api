@@ -27,6 +27,8 @@ namespace Infrastructure.Persistence.Interface
             Expression<Func<T, bool>> predicate = null,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null
         );
+        Task<(List<T> List, int Total)> GetListAllAsync(string filter = null, bool tracked = true, string includeProperties = null,
+    int? pageSize = null, int? pageNumber = null, string sort = null, string order = null, Expression<Func<T, bool>> filterFn = null);
         Task<T> GetAsync(string filter = null, bool tracked = true, string includeProperties = null, Expression<Func<T, bool>> filterFn = null);
         IEnumerable<T> GetAll(
           Expression<Func<T, bool>> predicate = null,

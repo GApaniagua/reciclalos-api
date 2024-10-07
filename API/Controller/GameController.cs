@@ -32,14 +32,15 @@ public class GameController : ControllerBase
 
     [HttpGet("{id}/questions")]
 
-    [SwaggerResponse(StatusCodes.Status400BadRequest, type: typeof(IAPIResponse<GameViewDto>))]
-    [SwaggerResponse(StatusCodes.Status404NotFound, type: typeof(IAPIResponse<GameViewDto>))]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, type: typeof(IAPIResponse<GameViewDto>))]
+    [SwaggerResponse(StatusCodes.Status200OK, type: typeof(IAPIResponseList<QuestionDTO>), contentTypes: ["application/json"])]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, type: typeof(IAPIResponseList<QuestionDTO>))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, type: typeof(IAPIResponseList<QuestionDTO>))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, type: typeof(IAPIResponseList<QuestionDTO>))]
     [SwaggerOperation(Summary = "Get Questions by game",
                     Description = "This service is public.")]
-    public async Task<ActionResult<Response<GameViewDto>>> GetQuestions(int id)
+    public async Task<ActionResult<IAPIResponseList<QuestionDTO>>> GetQuestions(int id)
     {
-        IAPIResponse<GameViewDto> apiResponse = new();
+        IAPIResponseList<QuestionDTO> apiResponse = new();
 
         if (id <= 0)
         {
@@ -49,22 +50,16 @@ public class GameController : ControllerBase
             return BadRequest(apiResponse);
         }
 
-        var defaultProperties = new List<string>();
+        var defaultProperties = new List<string> { "Answers" };
 
-        var dbResult = await questionRepository.GetAsync(filter: $"Id == {id}", tracked: false,
+        var dbResult = await questionRepository.GetListAllAsync(filter: $"GameId == {id}", tracked: false,
        includeProperties: string.Join(",", defaultProperties.ToArray()), filterFn: null);
 
-        if (dbResult == null)
-        {
-            apiResponse.IsSuccess = false;
-            apiResponse.Message = new List<string> { $"Flow {id} not found" };
-            apiResponse.Status = HttpStatusCode.NotFound;
-            return NotFound(apiResponse);
-        }
+        var result = mapper.Map<List<QuestionDTO>>(dbResult.List);
 
-        var result = mapper.Map<GameViewDto>(dbResult);
         apiResponse.Status = HttpStatusCode.OK;
         apiResponse.Data = result;
+        apiResponse.Total = dbResult.Total;
 
         return Ok(apiResponse);
 
