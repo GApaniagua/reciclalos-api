@@ -372,6 +372,7 @@ public abstract class GenericRepository<T> where T : class
   public virtual async Task AddAsync(T t)
   {
     await _context.AddAsync(t);
+    await SaveAsync();
   }
 
   public virtual async Task AddAsync(IEnumerable<T> t)
@@ -396,6 +397,19 @@ public abstract class GenericRepository<T> where T : class
   public virtual void Update(T t)
   {
     _context.Update(t);
+  }
+
+  public virtual async Task<T> UpdateAsync(T t)
+  {
+    _context.Update(t);
+
+    await SaveAsync();
+
+    return t;
+  }
+  public async Task SaveAsync()
+  {
+    await _context.SaveChangesAsync();
   }
 
   public virtual void Update(IEnumerable<T> t)

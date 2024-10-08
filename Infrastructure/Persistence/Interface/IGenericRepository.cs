@@ -98,5 +98,6 @@ namespace Infrastructure.Persistence.Interface
 
         void Update(T t);
         void Update(IEnumerable<T> t);
+        Task<T> UpdateAsync(T t);
     }
 }

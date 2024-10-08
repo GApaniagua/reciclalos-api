@@ -45,7 +45,7 @@ public class GameController : ControllerBase
         if (id <= 0)
         {
             apiResponse.IsSuccess = false;
-            apiResponse.Message = new List<string> { "id must be greater than 0" };
+            apiResponse.Message = new List<string> { "id debe ser mayor a 0" };
             apiResponse.Status = HttpStatusCode.BadRequest;
             return BadRequest(apiResponse);
         }

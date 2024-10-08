@@ -139,6 +139,9 @@ builder.Services.AddScoped<IAuthService, AuthManager>();
 builder.Services.AddScoped<IGameService, GameManager>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<ILocationRepository, LocationRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICollectionRepository, CollectionRepository>();
 
 var app = builder.Build();
 

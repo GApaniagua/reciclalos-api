@@ -122,6 +122,11 @@ public class MapperProfile : Profile
     .ForMember(d => d.PapelYCarton, o => o.MapFrom(m => m.Papel));
     #endregion
 
+    CreateMap<Collection, CreateCollectorWithMaterialsDTO>()
+    .ForMember(d => d.CollectionCenterId, o => o.MapFrom(m => m.IdLocation))
+    .ForMember(d => d.CollectorId, o => o.MapFrom(m => m.IdUser))
+    ;
+
   }
 
 }
