@@ -120,6 +120,7 @@ public class AuthManager : IAuthService
         return new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+            new Claim("id", user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim("role", user.Type),
             new Claim("username", user.Username),
